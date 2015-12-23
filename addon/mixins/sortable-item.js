@@ -210,9 +210,6 @@ export default Mixin.create({
     set(_, value) {
       if (value !== this.dropTargetPosition) {
         this.dropTargetPosition = value;
-//        this._scheduleApplyPosition();
-
-Ember.Logger.log("setting drop position",value,this.model)
 
         this.$().removeClass('drop-target before after');
 
@@ -325,8 +322,6 @@ Ember.Logger.log("setting drop position",value,this.model)
   _startDrag(event) {
     if (this.get('isBusy')) { return; }
 
-Ember.Logger.log("dragging",this.model); //****************************************
-
     let drag = this._makeDragHandler(event);
 
     let drop = () => {
@@ -428,11 +423,6 @@ Ember.Logger.log("dragging",this.model); //*************************************
     if (groupDirection === 'y') {
       let y = this.get('y');
       let dy = y - this.element.offsetTop;
-
-if (!this.isDragging)
-{
-  Ember.Logger.log("positioning",this.model,dy); //****************************************
-}
 
       this.$().css({
         transform: `translateY(${dy}px)`

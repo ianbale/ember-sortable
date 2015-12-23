@@ -108,14 +108,11 @@ export default Component.extend({
 
     sortedItems.forEach(item => {
 
-//Ember.Logger.log("item",get(item, 'model'));
-
       if (get(item, 'isDragging'))
       {
           // If dragged item is at the top, then drop-target goes before 1st item, otherwise it goes below the last item before current drag position
           if (previousItem)
           {
-//Ember.Logger.log("Setting drop target after",get(previousItem, 'model'));
             set(previousItem, 'dropTarget', DROP_TARGET_AFTER);
           }
           else

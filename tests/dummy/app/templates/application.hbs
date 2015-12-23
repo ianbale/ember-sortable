@@ -50,6 +50,21 @@
 
     </section>
 
+
+    <section class="horizontal-demo-droptarget">
+      <h3>Horizontal with drop target</h3>
+
+      {{#sortable-group tagName="ol" direction="x" onChange="update" as |group|}}
+        {{#each model.items as |item|}}
+          {{#sortable-item tagName="li" model=item group=group}}
+            {{item-presenter item=item}}
+          {{/sortable-item}}
+        {{/each}}
+      {{/sortable-group}}
+
+    </section>
+
+
     <section class="table-demo">
       <h3>Table</h3>
 

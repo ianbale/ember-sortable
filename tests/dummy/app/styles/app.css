@@ -71,7 +71,6 @@
   color: pink;
 }
 
-
 .vertical-demo-droptarget .sortable-item {
   display: block;
   position: relative;
@@ -82,17 +81,12 @@
 }
 
 .vertical-demo-droptarget .sortable-item div{
-  background: pink;
   position : relative;
   padding : 4px;
 }
 
-.vertical-demo-droptarget .sortable-item.is-dragging div{
-  background: red;
-}
 
 .vertical-demo-droptarget .sortable-item.is-dropping div{
-  background: #f66;
   z-index: 10;
 }
 
@@ -110,11 +104,11 @@
     content: " ";
     display: block;
     width : inherit;
-    height : 50px;
+    height : 40px;
     border : 2px dashed yellow;
     background-color: #FFFFDD;
     opacity: 1;
-    z-index : 1;
+    margin : 4px;
 }
 
 .vertical-demo-droptarget .sortable-item.drop-target.before::before
@@ -122,11 +116,11 @@
     content: " ";
     display: block;
     width : inherit;
-    height : 50px;
+    height : 40px;
     border : 2px dashed yellow;
     background-color: #FFFFDD;
     opacity: 1;
-    z-index : 1;
+    margin : 4px;
 }
 
 
@@ -147,28 +141,43 @@
   z-index: 10;
 }
 
-.horizontal-demo .sortable-item.drop-target.after::after
-{
-    content: " ";
-    display: block;
-    width : inherit;
-    height : 50px;
-    border : 2px dashed yellow;
-    background-color: #FFFFDD;
-    opacity: 1;
-    z-index : 1;
+.horizontal-demo-droptarget .sortable-item {
+  display: inline-block;
+  position: relative;
+  cursor: move;
 }
 
-.horizontal-demo .sortable-item.drop-target.before::before
+.horizontal-demo-droptarget .sortable-item div{
+  padding: 4px;
+  display : inline-block;
+}
+
+.horizontal-demo-droptarget .sortable-item.is-dropping div{
+  z-index: 10;
+}
+
+.horizontal-demo-droptarget .sortable-item.drop-target.after::after
 {
+    margin : -12px -4px;
     content: " ";
-    display: block;
-    width : inherit;
-    height : 50px;
+    display: inline-block;
+    width : 100px;
+    height : 42px;
     border : 2px dashed yellow;
     background-color: #FFFFDD;
     opacity: 1;
-    z-index : 1;
+}
+
+.horizontal-demo-droptarget .sortable-item.drop-target.before::before
+{
+    margin : -12px -4px;
+    content: " ";
+    display: inline-block;
+    width : 100px;
+    height : 42px;
+    border : 2px dashed yellow;
+    background-color: #FFFFDD;
+    opacity: 1;
 }
 
 
