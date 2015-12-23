@@ -4,6 +4,9 @@ import computed from 'ember-new-computed';
 const { A, Component, get, set, run } = Ember;
 const a = A;
 const NO_MODEL = {};
+const DROP_TARGET_AFTER = "after";
+const DROP_TARGET_BEFORE = "before";
+const DROP_TARGET_NONE = "none";
 
 export default Component.extend({
   layout: layout,
@@ -90,19 +93,51 @@ export default Component.extend({
       position = this.get('itemPosition');
     }
 
+    let dimension;
+    let direction = this.get('direction');
+
+    if (direction === 'x') {
+      dimension = 'width';
+    }
+    if (direction === 'y') {
+      dimension = 'height';
+    }
+
+    let previousItem;
+    let setDropTargetBeforeNextItem = false;
+
     sortedItems.forEach(item => {
-      let dimension;
-      let direction = this.get('direction');
 
-      if (!get(item, 'isDragging')) {
+//Ember.Logger.log("item",get(item, 'model'));
+
+      if (get(item, 'isDragging'))
+      {
+          // If dragged item is at the top, then drop-target goes before 1st item, otherwise it goes below the last item before current drag position
+          if (previousItem)
+          {
+//Ember.Logger.log("Setting drop target after",get(previousItem, 'model'));
+            set(previousItem, 'dropTarget', DROP_TARGET_AFTER);
+          }
+          else
+          {
+             setDropTargetBeforeNextItem = true;
+          }
+      }
+
+      else {
         set(item, direction, position);
-      }
 
-      if (direction === 'x') {
-        dimension = 'width';
-      }
-      if (direction === 'y') {
-        dimension = 'height';
+        if (setDropTargetBeforeNextItem)
+        {
+          set(item, 'dropTarget', DROP_TARGET_BEFORE);
+          setDropTargetBeforeNextItem =  false;
+        }
+        else
+        {
+          set(item, 'dropTarget', DROP_TARGET_NONE);
+        }
+
+        previousItem = item;
       }
 
       position += get(item, dimension);

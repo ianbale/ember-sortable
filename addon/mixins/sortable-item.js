@@ -2,6 +2,7 @@ import Ember from 'ember';
 import computed from 'ember-new-computed';
 const { Mixin, $, run } = Ember;
 const { Promise } = Ember.RSVP;
+const DROP_TARGET_NONE = "none";
 
 export default Mixin.create({
   classNames: ['sortable-item'],
@@ -93,6 +94,9 @@ export default Mixin.create({
     @property isAnimated
     @type Boolean
   */
+
+  dropTargetPosition : DROP_TARGET_NONE,
+
   isAnimated: computed(function() {
     let el = this.$();
     let property = el.css('transition-property');
@@ -198,6 +202,28 @@ export default Mixin.create({
     return height;
   }).volatile(),
 
+  dropTarget: computed({
+    get() {
+
+      return this.dropTargetPosition;
+    },
+    set(_, value) {
+      if (value !== this.dropTargetPosition) {
+        this.dropTargetPosition = value;
+//        this._scheduleApplyPosition();
+
+Ember.Logger.log("setting drop position",value,this.model)
+
+        this.$().removeClass('drop-target before after');
+
+        if(value !== DROP_TARGET_NONE)
+        {
+            this.$().addClass('drop-target ' + value);
+        }
+      }
+    },
+  }).volatile(),
+
   /**
     @method didInsertElement
   */
@@ -298,6 +324,8 @@ export default Mixin.create({
   */
   _startDrag(event) {
     if (this.get('isBusy')) { return; }
+
+Ember.Logger.log("dragging",this.model); //****************************************
 
     let drag = this._makeDragHandler(event);
 
@@ -400,6 +428,11 @@ export default Mixin.create({
     if (groupDirection === 'y') {
       let y = this.get('y');
       let dy = y - this.element.offsetTop;
+
+if (!this.isDragging)
+{
+  Ember.Logger.log("positioning",this.model,dy); //****************************************
+}
 
       this.$().css({
         transform: `translateY(${dy}px)`

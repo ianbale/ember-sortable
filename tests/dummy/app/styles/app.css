@@ -46,8 +46,12 @@
 .vertical-demo .sortable-item {
   display: block;
   position: relative;
+}
+
+.vertical-demo .sortable-item {
   background: pink;
   margin: 4px 0;
+  position : relative;
 }
 
 .vertical-demo .sortable-item.is-dragging {
@@ -68,6 +72,65 @@
 }
 
 
+.vertical-demo-droptarget .sortable-item {
+  display: block;
+  position: relative;
+}
+
+.vertical-demo-droptarget .sortable-item {
+  margin: -4px 0;
+}
+
+.vertical-demo-droptarget .sortable-item div{
+  background: pink;
+  position : relative;
+  padding : 4px;
+}
+
+.vertical-demo-droptarget .sortable-item.is-dragging div{
+  background: red;
+}
+
+.vertical-demo-droptarget .sortable-item.is-dropping div{
+  background: #f66;
+  z-index: 10;
+}
+
+.vertical-demo-droptarget .sortable-item .handle {
+  display: block;
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  background: rgba(127, 0, 0, .5);
+  color: pink;
+}
+
+
+.vertical-demo-droptarget .sortable-item.drop-target.after::after
+{
+    content: " ";
+    display: block;
+    width : inherit;
+    height : 50px;
+    border : 2px dashed yellow;
+    background-color: #FFFFDD;
+    opacity: 1;
+    z-index : 1;
+}
+
+.vertical-demo-droptarget .sortable-item.drop-target.before::before
+{
+    content: " ";
+    display: block;
+    width : inherit;
+    height : 50px;
+    border : 2px dashed yellow;
+    background-color: #FFFFDD;
+    opacity: 1;
+    z-index : 1;
+}
+
+
+
 .horizontal-demo .sortable-item {
   display: inline-block;
   position: relative;
@@ -82,6 +145,30 @@
 .horizontal-demo .sortable-item.is-dropping {
   background: hsl(197, 100%, 40%);
   z-index: 10;
+}
+
+.horizontal-demo .sortable-item.drop-target.after::after
+{
+    content: " ";
+    display: block;
+    width : inherit;
+    height : 50px;
+    border : 2px dashed yellow;
+    background-color: #FFFFDD;
+    opacity: 1;
+    z-index : 1;
+}
+
+.horizontal-demo .sortable-item.drop-target.before::before
+{
+    content: " ";
+    display: block;
+    width : inherit;
+    height : 50px;
+    border : 2px dashed yellow;
+    background-color: #FFFFDD;
+    opacity: 1;
+    z-index : 1;
 }
 
 
@@ -107,7 +194,6 @@
   background: transparent;
   color: black;
 }
-
 
 .scrollable-demo .sortable-container {
   height: 300px;
@@ -141,3 +227,5 @@
   background: rgba(127, 0, 0, .5);
   color: pink;
 }
+
+

@@ -10,10 +10,28 @@
       {{#sortable-group tagName="ol" onChange="update" as |group|}}
         {{#each model.items as |item|}}
           {{#sortable-item tagName="li" model=item group=group handle=".handle"}}
-            {{item}}
+           <div> {{item}}
             <span class="handle" data-item="{{item}}">
               <span>&vArr;</span>
             </span>
+            </div>
+          {{/sortable-item}}
+        {{/each}}
+      {{/sortable-group}}
+    </section>
+
+    <section class="vertical-demo-droptarget">
+      <h3>Vertical with drop target</h3>
+
+      {{#sortable-group tagName="ol" onChange="update" as |group|}}
+        {{#each model.items as |item|}}
+          {{#sortable-item tagName="li" model=item group=group handle=".handle"}}
+            <div>
+              {{item}}
+              <span class="handle" data-item="{{item}}">
+                <span>&vArr;</span>
+              </span>
+            </div>
           {{/sortable-item}}
         {{/each}}
       {{/sortable-group}}
@@ -60,10 +78,12 @@
         {{#sortable-group tagName="ol" onChange="update" as |group|}}
           {{#each model.items as |item|}}
             {{#sortable-item tagName="li" model=item group=group handle=".handle"}}
-              {{item}}
-              <span class="handle" data-item="{{item}}">
-                <span>&vArr;</span>
-              </span>
+              <div>
+                {{item}}
+                <span class="handle" data-item="{{item}}">
+                  <span>&vArr;</span>
+                </span>
+              </div>
             {{/sortable-item}}
           {{/each}}
         {{/sortable-group}}
@@ -80,4 +100,5 @@
       <a href="https://github.com/jgwhite/ember-sortable">View on GitHub</a>
     </p>
   </footer>
+
 </article>
