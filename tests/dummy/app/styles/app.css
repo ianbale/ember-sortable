@@ -237,4 +237,13 @@
   color: pink;
 }
 
+.drop-target
+{
+    content: " ";
+    display: block;
+    width : 100%;
+    height : 100%;
+    border : 2px dashed yellow;
+    background-color: #FFFFDD;
+}
 

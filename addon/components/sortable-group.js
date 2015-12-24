@@ -76,8 +76,54 @@ export default Component.extend({
     we don’t incur expensive re-layouts.
     @method prepare
   */
-  prepare() {
+  prepare(draggedItem) {
     this._itemPosition = this.get('itemPosition');
+
+    let sortedItems = this.get('sortedItems');
+    let position = this._itemPosition;
+
+    // Just in case we haven’t called prepare first.
+    if (position === undefined) {
+      position = this.get('itemPosition');
+    }
+
+    let dimension;
+    let direction = this.get('direction');
+
+    if (direction === 'x') {
+      dimension = 'width';
+    }
+    if (direction === 'y') {
+      dimension = 'height';
+    }
+
+    let previousItem;
+    let setDropTargetBeforeNextItem = false;
+    let foundDragger = false;
+    let dragItemDimension;
+
+    sortedItems.forEach(item => {
+
+      if (item === draggedItem)
+      {
+          dragItemDimension = get(item, dimension);
+          position -= dragItemDimension;
+
+          foundDragger = true;
+      }
+      else 
+      {
+        if (foundDragger)
+        {
+          set(item, direction, position);
+        }
+
+        previousItem = item;
+      }
+
+      position += get(item, dimension);
+  
+    });
   },
 
   /**
@@ -105,6 +151,8 @@ export default Component.extend({
 
     let previousItem;
     let setDropTargetBeforeNextItem = false;
+    let foundDragger = false;
+    let dragItemDimension;
 
     sortedItems.forEach(item => {
 
@@ -117,13 +165,16 @@ export default Component.extend({
           }
           else
           {
-             setDropTargetBeforeNextItem = true;
+            setDropTargetBeforeNextItem = true;
           }
+
+          dragItemDimension = get(item, dimension);
+          position -= dragItemDimension;
+
+          foundDragger = true;
       }
-
-      else {
-        set(item, direction, position);
-
+      else 
+      {
         if (setDropTargetBeforeNextItem)
         {
           set(item, 'dropTarget', DROP_TARGET_BEFORE);
@@ -138,6 +189,7 @@ export default Component.extend({
       }
 
       position += get(item, dimension);
+  
     });
   },
 

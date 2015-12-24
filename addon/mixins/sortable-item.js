@@ -211,11 +211,48 @@ export default Mixin.create({
       if (value !== this.dropTargetPosition) {
         this.dropTargetPosition = value;
 
-        this.$().removeClass('drop-target before after');
-
         if(value !== DROP_TARGET_NONE)
         {
-            this.$().addClass('drop-target ' + value);
+          if (!this.$().hasClass(value) )
+          {
+            if (this.$().hasClass('after'))
+            {
+              this.$().next().remove();
+              this.$().removeClass('after');
+            }
+
+            if (this.$().hasClass('before'))
+            {
+              this.$().prev().remove();
+              this.$().removeClass('before');
+            }
+
+            this.$()[value]('<div class="drop-target">&nbsp;</div>');
+            this.$().addClass('drop-target-parent');
+            this.$().addClass(value);
+
+            let translationMatrix = this.$().css('transform');
+
+            $('.drop-target').css({
+              transform: translationMatrix
+            });
+          }
+        }
+        else
+        {
+          if (this.$().hasClass('drop-target-parent'))
+          {
+            if (this.$().hasClass('after'))
+            {
+              this.$().next().remove();
+            }
+            else
+            {
+              this.$().prev().remove();
+            }
+
+            this.$().removeClass('drop-target-parent before after');
+          }
         }
       }
     },
@@ -336,7 +373,7 @@ export default Mixin.create({
       .on('mousemove touchmove', drag)
       .on('mouseup touchend', drop);
 
-    this._tellGroup('prepare');
+    this._tellGroup('prepare',this);
     this.set('isDragging', true);
     this.sendAction('onDragStart', this.get('model'));
   },
@@ -423,7 +460,7 @@ export default Mixin.create({
     if (groupDirection === 'y') {
       let y = this.get('y');
       let dy = y - this.element.offsetTop;
-
+      
       this.$().css({
         transform: `translateY(${dy}px)`
       });
