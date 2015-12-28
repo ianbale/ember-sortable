@@ -32,6 +32,12 @@ export default Component.extend({
   items: computed(() => a()),
 
   /**
+    @property dragItemDimension
+    @type object
+  */
+  dragItemDimensions: {width:0,height:0},
+
+  /**
     Position for the first item.
     @property itemPosition
     @type Number
@@ -100,14 +106,18 @@ export default Component.extend({
     let previousItem;
     let setDropTargetBeforeNextItem = false;
     let foundDragger = false;
-    let dragItemDimension;
+    let dragItemDimensions = {width:0,height:0};
 
     sortedItems.forEach(item => {
 
       if (item === draggedItem)
       {
-          dragItemDimension = get(item, dimension);
-          position -= dragItemDimension;
+          dragItemDimensions.width = get(item, 'width');
+          dragItemDimensions.height = get(item, 'height');
+
+          this.set("dragItemDimensions",dragItemDimensions);
+
+          position -= dragItemDimensions[dimension];
 
           foundDragger = true;
       }
@@ -116,6 +126,7 @@ export default Component.extend({
         if (foundDragger)
         {
           set(item, direction, position);
+          // Small bug here. If we are horizintal dragging and out drag item is taller than others in the list then it gets positioned vertically in the wrong location.
         }
 
         previousItem = item;
@@ -132,28 +143,11 @@ export default Component.extend({
   */
   update() {
     let sortedItems = this.get('sortedItems');
-    let position = this._itemPosition;
-
-    // Just in case we haven’t called prepare first.
-    if (position === undefined) {
-      position = this.get('itemPosition');
-    }
-
-    let dimension;
-    let direction = this.get('direction');
-
-    if (direction === 'x') {
-      dimension = 'width';
-    }
-    if (direction === 'y') {
-      dimension = 'height';
-    }
-
     let previousItem;
     let setDropTargetBeforeNextItem = false;
     let foundDragger = false;
-    let dragItemDimension;
-
+    let dragItemDimensions = this.get("dragItemDimensions");
+ 
     sortedItems.forEach(item => {
 
       if (get(item, 'isDragging'))
@@ -162,14 +156,12 @@ export default Component.extend({
           if (previousItem)
           {
             set(previousItem, 'dropTarget', DROP_TARGET_AFTER);
+            set(previousItem, 'dropTargetDimensions',dragItemDimensions);
           }
           else
           {
             setDropTargetBeforeNextItem = true;
           }
-
-          dragItemDimension = get(item, dimension);
-          position -= dragItemDimension;
 
           foundDragger = true;
       }
@@ -177,18 +169,18 @@ export default Component.extend({
       {
         if (setDropTargetBeforeNextItem)
         {
+          set(item, 'dropTargetDimensions',dragItemDimensions);
           set(item, 'dropTarget', DROP_TARGET_BEFORE);
           setDropTargetBeforeNextItem =  false;
         }
         else
         {
+          set(item, 'dropTargetDimensions',dragItemDimensions);
           set(item, 'dropTarget', DROP_TARGET_NONE);
         }
 
         previousItem = item;
       }
-
-      position += get(item, dimension);
   
     });
   },

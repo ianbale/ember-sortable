@@ -4,7 +4,7 @@ const a = Ember.A;
 export default Ember.Route.extend({
   model() {
     return {
-      items: a(['Uno', 'Dos', 'Tres', 'Cuatro', 'Cinco'])
+      items: a(['Uno<br>1', 'Dos', 'Tres', 'Cuatro', 'Cinco'])
     };
   },
 

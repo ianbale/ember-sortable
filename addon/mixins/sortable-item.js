@@ -90,12 +90,22 @@ export default Mixin.create({
   updateInterval: 125,
 
   /**
+    @property dropTargetPosition
+    @type numeric
+  */
+  dropTargetPosition : DROP_TARGET_NONE,
+
+  /**
+    @property dropTargetDimensions
+    @type struct
+  */
+  dropTargetDimensions : {height:0,width:0},
+
+  /**
     True if the item transitions with animation.
     @property isAnimated
     @type Boolean
   */
-
-  dropTargetPosition : DROP_TARGET_NONE,
 
   isAnimated: computed(function() {
     let el = this.$();
@@ -103,6 +113,9 @@ export default Mixin.create({
 
     return /all|transform/.test(property);
   }).volatile(),
+
+
+
 
   /**
     The current transition duration in milliseconds.
@@ -211,6 +224,8 @@ export default Mixin.create({
       if (value !== this.dropTargetPosition) {
         this.dropTargetPosition = value;
 
+        let dropTargetDimensions =  this.get("dropTargetDimensions");
+
         if(value !== DROP_TARGET_NONE)
         {
           if (!this.$().hasClass(value) )
@@ -227,14 +242,28 @@ export default Mixin.create({
               this.$().removeClass('before');
             }
 
-            this.$()[value]('<div class="drop-target">&nbsp;</div>');
+            let thisItemTagName = this.$().context.tagName;
+
+            if (thisItemTagName === "TR")
+            {
+              let TDCount = this.$().context.childElementCount;
+              this.$()[value]('<tr class="drop-target"><td colspan="' + TDCount + '">&nbsp;</td></tr>');
+            }
+            else
+            {
+              this.$()[value]('<' + thisItemTagName +' class="drop-target">&nbsp;</'+ thisItemTagName+'>');
+            }
+
             this.$().addClass('drop-target-parent');
             this.$().addClass(value);
+
 
             let translationMatrix = this.$().css('transform');
 
             $('.drop-target').css({
-              transform: translationMatrix
+              transform: translationMatrix,
+              height : dropTargetDimensions.height,
+              width : dropTargetDimensions.width
             });
           }
         }
@@ -254,6 +283,18 @@ export default Mixin.create({
             this.$().removeClass('drop-target-parent before after');
           }
         }
+      }
+    },
+  }).volatile(),
+
+  dropTargetDimensions: computed({
+    get() {
+
+      return this.dropTargetDimensions;
+    },
+    set(_, value) {
+      if (value !== this.dropTargetDimensions) {
+        this.dropTargetDimensions = value;
       }
     },
   }).volatile(),
@@ -460,7 +501,7 @@ export default Mixin.create({
     if (groupDirection === 'y') {
       let y = this.get('y');
       let dy = y - this.element.offsetTop;
-      
+
       this.$().css({
         transform: `translateY(${dy}px)`
       });
