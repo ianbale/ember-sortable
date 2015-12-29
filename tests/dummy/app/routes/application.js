@@ -12,6 +12,13 @@ export default Ember.Route.extend({
     update(newOrder, draggedModel) {
       this.set('currentModel.items', a(newOrder));
       this.set('currentModel.dragged', draggedModel);
+    },
+
+    insert(newOrder, draggedModel) {
+
+      let items = this.get("items");
+      this.set('currentModel.items', a(newOrder));
     }
   }
+
 });

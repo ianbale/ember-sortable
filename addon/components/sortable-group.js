@@ -76,6 +76,145 @@ export default Component.extend({
     this.get('items').removeObject(item);
   },
 
+
+  /**
+    @property sortedItems
+    @type Array
+  */
+  sortedItemsWithDragIn: computed(function()
+  {
+    let items     = jQuery.extend(true, [], a(this.get('items')))
+    let dragitem  = this.get('dragitem');
+    items.push(dragitem);
+
+    let direction = this.get('direction');
+
+    return items.sortBy(direction);
+  }).volatile(),
+
+  dragitem : {},
+
+  /**
+    Apply and remove class dragging-over to our group as we drag in / drag out
+    This applies "pointer-events: none" which prevents events firing as we move over each dragable item
+  */
+  dragEnter : function(event)
+  {
+    if (!this.$().hasClass("dragging-over") && this.$().context === event.target)
+    {
+      this.$().addClass("dragging-over");
+    }
+  },
+
+  dragLeave : function(event)
+  {
+    if (this.$().hasClass("dragging-over") && this.$().context === event.target)
+    {
+      this.$().removeClass("dragging-over");
+
+      let items = this.get("sortedItemsWithDragIn");
+
+      items.forEach(item => {
+        set(item, 'dropTarget', DROP_TARGET_NONE);
+      });
+    }
+  },
+
+  /**
+    Disable default action for dragOver event and instead insert our drop tragte
+  */
+  dragOver: function(event)
+  {
+    event.preventDefault();
+
+    let dragItem = {model:"drag me",x:event.originalEvent.pageX,y:event.originalEvent.pageY,width:100,height:30,wasDropped:true};
+
+    this.set("dragitem",dragItem);
+
+    let sortedItems = this.get('sortedItemsWithDragIn');
+ 
+    this._itemPosition = this.get('itemPosition');
+    let position = this._itemPosition;
+
+    // Just in case we haven’t called prepare first.
+    if (position === undefined) {
+      position = this.get('itemPosition');
+    }
+
+    let dimension;
+    let direction = this.get('direction');
+
+    if (direction === 'x') {
+      dimension = 'width';
+    }
+    if (direction === 'y') {
+      dimension = 'height';
+    }
+
+    let previousItem;
+    let setDropTargetBeforeNextItem = false;
+    let foundDragger = false;
+
+    sortedItems.forEach(item => {
+
+      if (item === dragItem)
+      {
+          // If dragged item is at the top, then drop-target goes before 1st item, otherwise it goes below the last item before current drag position
+          if (previousItem)
+          {
+            set(previousItem, 'dropTarget', DROP_TARGET_AFTER);
+            set(previousItem, 'dropTargetDimensions',dragItem);
+          }
+          else
+          {
+            setDropTargetBeforeNextItem = true;
+          }
+
+          foundDragger = true;
+      }
+      else 
+      {
+        if (setDropTargetBeforeNextItem)
+        {
+          set(item, 'dropTargetDimensions',dragItem);
+          set(item, 'dropTarget', DROP_TARGET_BEFORE);
+          setDropTargetBeforeNextItem =  false;
+        }
+        else
+        {
+          set(item, 'dropTargetDimensions',dragItem);
+          set(item, 'dropTarget', DROP_TARGET_NONE);
+        }
+
+        previousItem = item;
+      }
+  
+    });
+
+  },
+
+  /**
+    Handle a drop event.
+  */
+  drop : function(event)
+  {
+    Ember.Logger.log("drop",event);
+    Ember.Logger.log("Remove drop target");
+    this.$().removeClass("dragging-over");
+
+    let items = this.get('sortedItemsWithDragIn');
+    let itemModels = items.mapBy('model');
+    let draggedItem = items.findBy('wasDropped', true);
+    let draggedModel = get(draggedItem, 'model');
+
+    items.forEach(item => {
+      set(item, 'dropTarget', DROP_TARGET_NONE);
+    });
+
+    this.sendAction('onInsert', itemModels, draggedModel);
+  },
+
+
   /**
     Prepare for sorting.
     Main purpose is to stash the current itemPosition so

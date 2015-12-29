@@ -198,3 +198,15 @@ li.drop-target
   display : inline-block;
 }
 
+.drag-me
+{
+    border : 2px dotted blue !important;
+    background-color: #FFFFDD !important; 
+    width : 100px;
+}
+
+
+.dragging-over .sortable-item
+{
+  pointer-events: none;
+}

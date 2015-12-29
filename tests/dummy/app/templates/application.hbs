@@ -7,7 +7,7 @@
     <section class="vertical-demo">
       <h3>Vertical</h3>
 
-      {{#sortable-group tagName="ol" onChange="update" as |group|}}
+      {{#sortable-group tagName="ol" onChange="update" onInsert="insert" as |group|}}
         {{#each model.items as |item|}}
           {{#sortable-item tagName="li" model=item group=group handle=".handle"}}
            <div> {{{item}}}
@@ -19,6 +19,9 @@
         {{/each}}
       {{/sortable-group}}
     </section>
+
+    <div class="drag-me" id="drag1" draggable="true">Hello</div>
+    <div class="drag-me" id="drag2" draggable="true">World</div>
 
     <section class="vertical-demo-droptarget">
       <h3>Vertical with drop target</h3>
