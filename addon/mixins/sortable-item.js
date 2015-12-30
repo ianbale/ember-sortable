@@ -99,7 +99,7 @@ export default Mixin.create({
     @property dropTargetDimensions
     @type struct
   */
-  dropTargetDimensions : {height:0,width:0},
+  _dropTargetDimensions : {height:0,width:0},
 
   /**
     True if the item transitions with animation.
@@ -150,14 +150,14 @@ export default Mixin.create({
     get() {
       if (this._x === undefined) {
         let marginLeft = parseFloat(this.$().css('margin-left'));
-        this._x = this.element.scrollLeft + this.element.offsetLeft - marginLeft + (this.get("width") / 2);
+        this._x = this.element.scrollLeft + this.element.offsetLeft - marginLeft;
       }
 
-      return this._x;
+      return this._x + this.get("dropTargetDimensions.width");
     },
     set(_, value) {
       if (value !== this._x) {
-        this._x = value + (this.get("width") / 2);
+        this._x = value;
         this._scheduleApplyPosition();
       }
     },
@@ -171,19 +171,27 @@ export default Mixin.create({
   y: computed({
     get() {
       if (this._y === undefined) {
-        this._y = this.element.offsetTop + (this.get("height") / 2);
+        this._y = this.element.offsetTop;
       }
-
-      return this._y;
+      return this._y + this.get("dropTargetDimensions.height");
     },
     set(key, value) {
       if (value !== this._y) {
-        this._y = value + (this.get("height") / 2);
+        this._y = value;
         this._scheduleApplyPosition();
       }
     }
   }).volatile(),
 
+  isInserting: computed({
+    get() {
+
+      return this._isInserting;
+    },
+    set(key, value) {
+        this._isInserting = value;
+    }
+  }).volatile(),
 
   /**
     Width of the item.
@@ -224,8 +232,6 @@ export default Mixin.create({
     set(_, value) {
 
       if (value !== this.dropTargetPosition) {
-
-      Ember.Logger.log("set",this.model,value,this.dropTargetPosition,value !== this.dropTargetPosition,new Date())
 
         this.dropTargetPosition = value;
 
@@ -295,11 +301,11 @@ export default Mixin.create({
   dropTargetDimensions: computed({
     get() {
 
-      return this.dropTargetDimensions;
+      return this._dropTargetDimensions;
     },
     set(_, value) {
-      if (value !== this.dropTargetDimensions) {
-        this.dropTargetDimensions = value;
+      if (value !== this._dropTargetDimensions) {
+        this._dropTargetDimensions = value;
       }
     },
   }).volatile(),
@@ -360,6 +366,7 @@ export default Mixin.create({
 
     delete this._y;
     delete this._x;
+    this._dropTargetDimensions = {height:0,width:0};
 
     el.css({ transform: '' });
   },

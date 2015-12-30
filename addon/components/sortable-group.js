@@ -155,6 +155,7 @@ export default Component.extend({
     let setDropTargetBeforeNextItem = false;
     let previousItemDropState;
 
+
     sortedItems.forEach(item => {
 
       set(item, 'dropTargetDimensions',dragItem);
@@ -205,8 +206,6 @@ export default Component.extend({
   */
   drop : function(event)
   {
-    Ember.Logger.log("drop")
-
     this.$().removeClass("dragging-over");
 
     let dragitems     = this.get('sortedItemsWithDragIn');
@@ -237,8 +236,6 @@ export default Component.extend({
     @method prepare
   */
   prepare(draggedItem) {
-
-    Ember.Logger.log("prepare");
 
     this._itemPosition = this.get('itemPosition');
 
