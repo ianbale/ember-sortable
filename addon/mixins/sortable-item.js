@@ -184,6 +184,12 @@ export default Mixin.create({
     }
   }).volatile(),
 
+  resetPositions : function()
+  {
+    delete this._y;
+    delete this._x;
+  },
+
   /**
     Width of the item.
     @property height

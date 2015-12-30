@@ -20,8 +20,11 @@
       {{/sortable-group}}
     </section>
 
-    <div class="drag-me" id="drag1" draggable="true">Hello</div>
-    <div class="drag-me" id="drag2" draggable="true">World</div>
+    {{#each model.picklist as |item|}}
+      {{#draggable-item tagname="div" model=item}}
+        {{{item.label}}} {{item.counter}}
+      {{/draggable-item}}
+    {{/each}}
 
     <section class="vertical-demo-droptarget">
       <h3>Vertical with drop target</h3>

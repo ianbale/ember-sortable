@@ -202,9 +202,9 @@ li.drop-target
 {
     border : 2px dotted blue !important;
     background-color: #FFFFDD !important; 
-    width : 100px;
+    width : 100%;
+    height : 75px;
 }
-
 
 .dragging-over .sortable-item
 {

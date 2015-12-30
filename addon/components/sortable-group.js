@@ -78,18 +78,18 @@ export default Component.extend({
 
 
   /**
-    @property sortedItems
+    @property sortedItemsWithDragIn
     @type Array
   */
   sortedItemsWithDragIn: computed(function()
   {
-    let items     = jQuery.extend(true, [], a(this.get('items')))
+    let dragitems = jQuery.extend(true, [], a(this.get('items')))
     let dragitem  = this.get('dragitem');
-    items.push(dragitem);
-
     let direction = this.get('direction');
 
-    return items.sortBy(direction);
+    dragitems.push(dragitem);
+
+    return dragitems.sortBy(direction);
   }).volatile(),
 
   dragitem : {},
@@ -127,7 +127,7 @@ export default Component.extend({
   {
     event.preventDefault();
 
-    let dragItem = {model:"drag me",x:event.originalEvent.pageX,y:event.originalEvent.pageY,width:100,height:30,wasDropped:true};
+    let dragItem = {x:event.originalEvent.pageX,y:event.originalEvent.pageY,width:'100%',height:50,newItem:true}; // Need to dynamically set height / width here...
 
     this.set("dragitem",dragItem);
 
@@ -198,20 +198,26 @@ export default Component.extend({
   */
   drop : function(event)
   {
-    Ember.Logger.log("drop",event);
-    Ember.Logger.log("Remove drop target");
     this.$().removeClass("dragging-over");
 
-    let items = this.get('sortedItemsWithDragIn');
-    let itemModels = items.mapBy('model');
-    let draggedItem = items.findBy('wasDropped', true);
-    let draggedModel = get(draggedItem, 'model');
+    let dragitems     = this.get('sortedItemsWithDragIn');
+    let itemModels    = dragitems.mapBy('model');
+    let draggedItem   = dragitems.findBy('newItem', true);
+    let insertPos     = dragitems.indexOf(draggedItem);
+    let draggedModel  = JSON.parse(event.dataTransfer.getData("text"));
 
-    items.forEach(item => {
+    // Reset things since positions will change as a result of inserting an item.
+    delete this._itemPosition;
+
+    set(draggedItem, 'newItem', false); // Reset
+
+    dragitems.forEach(item => {
       set(item, 'dropTarget', DROP_TARGET_NONE);
     });
 
-    this.sendAction('onInsert', itemModels, draggedModel);
+    dragitems.invoke('resetPositions');
+
+    this.sendAction('onInsert', insertPos, draggedModel);
   },
 
 
@@ -222,6 +228,9 @@ export default Component.extend({
     @method prepare
   */
   prepare(draggedItem) {
+
+    Ember.Logger.log("prepare");
+
     this._itemPosition = this.get('itemPosition');
 
     let sortedItems = this.get('sortedItems');
@@ -265,7 +274,7 @@ export default Component.extend({
         if (foundDragger)
         {
           set(item, direction, position);
-          // Small bug here. If we are horizintal dragging and out drag item is taller than others in the list then it gets positioned vertically in the wrong location.
+          // Small bug here. If we are horizintal dragging and our drag item is taller than others in the list then it gets positioned vertically in the wrong location.
         }
 
         previousItem = item;
