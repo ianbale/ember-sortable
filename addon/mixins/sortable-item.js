@@ -150,14 +150,14 @@ export default Mixin.create({
     get() {
       if (this._x === undefined) {
         let marginLeft = parseFloat(this.$().css('margin-left'));
-        this._x = this.element.scrollLeft + this.element.offsetLeft - marginLeft;
+        this._x = this.element.scrollLeft + this.element.offsetLeft - marginLeft + (this.get("width") / 2);
       }
 
       return this._x;
     },
     set(_, value) {
       if (value !== this._x) {
-        this._x = value;
+        this._x = value + (this.get("width") / 2);
         this._scheduleApplyPosition();
       }
     },
@@ -171,24 +171,19 @@ export default Mixin.create({
   y: computed({
     get() {
       if (this._y === undefined) {
-        this._y = this.element.offsetTop;
+        this._y = this.element.offsetTop + (this.get("height") / 2);
       }
 
       return this._y;
     },
     set(key, value) {
       if (value !== this._y) {
-        this._y = value;
+        this._y = value + (this.get("height") / 2);
         this._scheduleApplyPosition();
       }
     }
   }).volatile(),
 
-  resetPositions : function()
-  {
-    delete this._y;
-    delete this._x;
-  },
 
   /**
     Width of the item.
@@ -227,7 +222,11 @@ export default Mixin.create({
       return this.dropTargetPosition;
     },
     set(_, value) {
+
       if (value !== this.dropTargetPosition) {
+
+      Ember.Logger.log("set",this.model,value,this.dropTargetPosition,value !== this.dropTargetPosition,new Date())
+
         this.dropTargetPosition = value;
 
         let dropTargetDimensions =  this.get("dropTargetDimensions");

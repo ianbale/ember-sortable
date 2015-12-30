@@ -13,6 +13,12 @@ export default Mixin.create({
 	event.dataTransfer.setData('text', JSON.stringify(this.model));
 	event.dataTransfer.effectAllowed = 'copy';
 	event.dropEffect = "copy";
-  }
+  },
+
+  dragEnd : function(event)
+  {
+	$(".drop-target").remove();
+	$(".sortable-item").removeClass("before after drop-target-parent");
+  },
 
 });

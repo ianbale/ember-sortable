@@ -107,7 +107,7 @@ export default Component.extend({
   },
 
   dragLeave : function(event)
-  {
+  {return;
     if (this.$().hasClass("dragging-over") && this.$().context === event.target)
     {
       this.$().removeClass("dragging-over");
@@ -121,7 +121,7 @@ export default Component.extend({
   },
 
   /**
-    Disable default action for dragOver event and instead insert our drop tragte
+    Disable default action for dragOver event and instead insert our drop targets
   */
   dragOver: function(event)
   {
@@ -153,37 +153,40 @@ export default Component.extend({
 
     let previousItem;
     let setDropTargetBeforeNextItem = false;
-    let foundDragger = false;
+    let previousItemDropState;
 
     sortedItems.forEach(item => {
 
+      set(item, 'dropTargetDimensions',dragItem);
+
       if (item === dragItem)
       {
-          // If dragged item is at the top, then drop-target goes before 1st item, otherwise it goes below the last item before current drag position
-          if (previousItem)
-          {
-            set(previousItem, 'dropTarget', DROP_TARGET_AFTER);
-            set(previousItem, 'dropTargetDimensions',dragItem);
-          }
-          else
-          {
-            setDropTargetBeforeNextItem = true;
-          }
-
-          foundDragger = true;
+        // If dragged item is at the top, then drop-target goes before 1st item, otherwise it goes below the last item before current drag position
+        if (previousItem)
+        {
+          set(previousItem, 'dropTarget',DROP_TARGET_AFTER);
+          previousItemDropState = undefined;
+        }
+        else
+        {
+          setDropTargetBeforeNextItem = true;
+        }
       }
       else 
       {
+        if (previousItemDropState)
+        {
+          set(previousItem, 'dropTarget', previousItemDropState);
+        }
+
         if (setDropTargetBeforeNextItem)
         {
-          set(item, 'dropTargetDimensions',dragItem);
           set(item, 'dropTarget', DROP_TARGET_BEFORE);
           setDropTargetBeforeNextItem =  false;
         }
         else
         {
-          set(item, 'dropTargetDimensions',dragItem);
-          set(item, 'dropTarget', DROP_TARGET_NONE);
+          previousItemDropState = DROP_TARGET_NONE;
         }
 
         previousItem = item;
@@ -191,6 +194,10 @@ export default Component.extend({
   
     });
 
+    if (previousItemDropState)
+    {
+      set(previousItem, 'dropTarget', previousItemDropState);
+    }
   },
 
   /**
@@ -198,6 +205,8 @@ export default Component.extend({
   */
   drop : function(event)
   {
+    Ember.Logger.log("drop")
+
     this.$().removeClass("dragging-over");
 
     let dragitems     = this.get('sortedItemsWithDragIn');
@@ -215,7 +224,7 @@ export default Component.extend({
       set(item, 'dropTarget', DROP_TARGET_NONE);
     });
 
-    dragitems.invoke('resetPositions');
+    dragitems.invoke('reset');
 
     this.sendAction('onInsert', insertPos, draggedModel);
   },

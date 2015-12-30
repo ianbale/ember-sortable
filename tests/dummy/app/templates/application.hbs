@@ -29,7 +29,7 @@
     <section class="vertical-demo-droptarget">
       <h3>Vertical with drop target</h3>
 
-      {{#sortable-group tagName="ol" onChange="update" as |group|}}
+      {{#sortable-group tagName="ol" onChange="update" onInsert="insert" as |group|}}
         {{#each model.items as |item|}}
           {{#sortable-item tagName="li" model=item group=group handle=".handle"}}
             <div>
@@ -46,7 +46,7 @@
     <section class="horizontal-demo">
       <h3>Horizontal</h3>
 
-      {{#sortable-group tagName="ol" direction="x" onChange="update" as |group|}}
+      {{#sortable-group tagName="ol" direction="x" onChange="update" onInsert="insert" as |group|}}
         {{#each model.items as |item|}}
           {{#sortable-item tagName="li" model=item group=group}}
             {{item-presenter item=item}}
@@ -60,7 +60,7 @@
     <section class="horizontal-demo-droptarget">
       <h3>Horizontal with drop target</h3>
 
-      {{#sortable-group tagName="ol" direction="x" onChange="update" as |group|}}
+      {{#sortable-group tagName="ol" direction="x" onChange="update" onInsert="insert" as |group|}}
         {{#each model.items as |item|}}
           {{#sortable-item tagName="li" model=item group=group}}
             {{item-presenter item=item}}
@@ -81,7 +81,7 @@
             <th>Item</th>
           </tr>
         </thead>
-        {{#sortable-group tagName="tbody" onChange="update" as |group|}}
+        {{#sortable-group tagName="tbody" onChange="update" onInsert="insert" as |group|}}
           {{#each model.items as |item|}}
             {{#sortable-item tagName="tr" model=item group=group handle=".handle"}}
               <td><span class="handle" data-item="{{item}}">&vArr;</span></td>
@@ -96,7 +96,7 @@
       <h3>Scrollable</h3>
 
       <div class="sortable-container">
-        {{#sortable-group tagName="ol" onChange="update" as |group|}}
+        {{#sortable-group tagName="ol" onChange="update" onInsert="insert" as |group|}}
           {{#each model.items as |item|}}
             {{#sortable-item tagName="li" model=item group=group handle=".handle"}}
               <div>
