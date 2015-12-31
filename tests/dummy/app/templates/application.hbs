@@ -7,14 +7,25 @@
     <section class="vertical-demo">
       <h3>Vertical</h3>
 
-      {{#sortable-group tagName="ol" onChange="update" onInsert="insert" as |group|}}
+      {{#sortable-group tagName="ol" onChange="update" onInsert="insert" onSortStart="sortstart" onSortEnd="sortend" as |group|}}
         {{#each model.items as |item|}}
           {{#sortable-item tagName="li" model=item group=group handle=".handle"}}
-           <div> {{{item}}}
+           
+
+           <div> {{{item.label}}}
             <span class="handle" data-item="{{item}}">
               <span>&vArr;</span>
             </span>
             </div>
+
+          {{#unless item.sorting}}
+            <div style="padding-right:50px;font-size:12px">
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris mollis feugiat purus, et cursus mauris pulvinar eu. Fusce vel enim vel risus hendrerit fringilla ut eget velit. Vestibulum suscipit leo quis sapien dignissim porta. Duis fringilla ut ipsum et lobortis. Aliquam hendrerit enim eget erat dictum, eu scelerisque mi bibendum. Sed ullamcorper gravida arcu sit amet rhoncus. Nullam sagittis pulvinar erat id pulvinar. Suspendisse dignissim, sem eget vehicula consectetur, diam ante ultricies libero, non venenatis dui urna et massa.</p>
+
+              <p>Etiam quis maximus est. Etiam nec urna auctor, fringilla nulla quis, posuere nibh. Aliquam ante augue, finibus eget condimentum eget, lobortis ut erat. Morbi maximus, lorem nec pulvinar ornare, elit eros eleifend velit, et ullamcorper odio elit eu ex. Vestibulum eget porttitor quam. Proin odio arcu, lobortis a rutrum et, lobortis ac mauris. Ut sollicitudin dictum ligula, a consequat neque condimentum vel.
+              </p>
+            </div>
+          {{/unless}}
           {{/sortable-item}}
         {{/each}}
       {{/sortable-group}}

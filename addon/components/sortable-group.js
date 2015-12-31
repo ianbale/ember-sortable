@@ -234,59 +234,65 @@ export default Component.extend({
     we don’t incur expensive re-layouts.
     @method prepare
   */
-  prepare(draggedItem) {
+  prepare(draggedItem)
+  {
+    this.sendAction('onSortStart', draggedItem);
 
-    this._itemPosition = this.get('itemPosition');
+    var _this = this;
+    Ember.run.next(function()
+    {
+      _this._itemPosition = _this.get('itemPosition');
 
-    let sortedItems = this.get('sortedItems');
-    let position = this._itemPosition;
+      let sortedItems = _this.get('sortedItems');
+      let position = _this._itemPosition;
 
-    // Just in case we haven’t called prepare first.
-    if (position === undefined) {
-      position = this.get('itemPosition');
-    }
-
-    let dimension;
-    let direction = this.get('direction');
-
-    if (direction === 'x') {
-      dimension = 'width';
-    }
-    if (direction === 'y') {
-      dimension = 'height';
-    }
-
-    let previousItem;
-    let setDropTargetBeforeNextItem = false;
-    let foundDragger = false;
-    let dragItemDimensions = {width:0,height:0};
-
-    sortedItems.forEach(item => {
-
-      if (item === draggedItem)
-      {
-          dragItemDimensions.width = get(item, 'width');
-          dragItemDimensions.height = get(item, 'height');
-
-          this.set("dragItemDimensions",dragItemDimensions);
-
-          position -= dragItemDimensions[dimension];
-
-          foundDragger = true;
+      // Just in case we haven’t called prepare first.
+      if (position === undefined) {
+        position = _this.get('itemPosition');
       }
-      else 
-      {
-        if (foundDragger)
+
+      let dimension;
+      let direction = _this.get('direction');
+
+      if (direction === 'x') {
+        dimension = 'width';
+      }
+      if (direction === 'y') {
+        dimension = 'height';
+      }
+
+      let previousItem;
+      let setDropTargetBeforeNextItem = false;
+      let foundDragger = false;
+      let dragItemDimensions = {width:0,height:0};
+
+      sortedItems.forEach(item => {
+
+        if (item === draggedItem)
         {
-          set(item, direction, position);
-          // Small bug here. If we are horizintal dragging and our drag item is taller than others in the list then it gets positioned vertically in the wrong location.
+            dragItemDimensions.width = get(item, 'width');
+            dragItemDimensions.height = get(item, 'height');
+
+            _this.set("dragItemDimensions",dragItemDimensions);
+
+            position -= dragItemDimensions[dimension];
+
+            foundDragger = true;
+        }
+        else 
+        {
+          if (foundDragger)
+          {
+            set(item, direction, position);
+            // Small bug here. If we are horizintal dragging and our drag item is taller than others in the list then it gets positioned vertically in the wrong location.
+          }
+
+          previousItem = item;
         }
 
-        previousItem = item;
-      }
-
-      position += get(item, dimension);
-  
+        position += get(item, dimension);
+    
+      });
     });
   },
 
@@ -374,5 +380,7 @@ export default Component.extend({
     } else {
       this.sendAction('onChange', itemModels, draggedModel);
     }
+
+    this.sendAction('onSortEnd', draggedItem);
   }
 });

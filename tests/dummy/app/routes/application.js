@@ -4,10 +4,11 @@ const a = Ember.A;
 export default Ember.Route.extend({
   model() {
     return {
-      items: a(['Uno<br>1', 'Dos', 'Tres', 'Cuatro', 'Cinco']),
+      items: a([{label:'Uno<br>1',sorting:false}, {label:'Dos',sorting:false}, {label:'Tres',sorting:false}, {label:'Cuatro',sorting:false}, {label:'Cinco',sorting:false}]),
       picklist : a([{id:1,counter:1,label:'blue'},{id:2,counter:1,label:'green'},{id:3,counter:1,label:'red'}])
     };
   },
+ 
 
   actions: {
     update(newOrder, draggedModel)
@@ -22,13 +23,31 @@ export default Ember.Route.extend({
       let picklist      = this.get("currentModel.picklist");
       let picklistItem  = picklist.findBy('id', draggedModel.id);
 
-      items.insertAt(insertPos, picklistItem.label + ' ' + picklistItem.counter);
+      items.insertAt(insertPos, {label:picklistItem.label + ' ' + picklistItem.counter,sorting:false});
 
       this.set('currentModel.dragged', picklistItem.label);
 
       Ember.set(picklistItem,"counter",picklistItem.counter+1);
+    },
 
- //     Ember.Logger.log("after insert",insertPos, draggedModel,picklistItem,items);
+    sortstart (draggedModel)
+    {
+      Ember.Logger.log("sort start",draggedModel)
+      
+      let items     = this.get("currentModel.items");
+      let modelItem = items.findBy('label', draggedModel.model.label);
+
+      Ember.set(modelItem,"sorting",true);
+    },
+
+    sortend (draggedModel)
+    {
+      Ember.Logger.log("sort end",draggedModel)
+
+      let items     = this.get("currentModel.items");
+      let modelItem = items.findBy('label', draggedModel.model.label);
+
+      Ember.set(modelItem,"sorting",false);
     }
   }
 
