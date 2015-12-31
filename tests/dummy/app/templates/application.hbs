@@ -20,14 +20,19 @@
       {{/sortable-group}}
     </section>
 
-    {{#each model.picklist as |item|}}
-      {{#draggable-item tagname="div" model=item}}
-        {{{item.label}}} {{item.counter}}
-      {{/draggable-item}}
-    {{/each}}
+    <section class="horizontal-demo-droptarget">
+      <h3>These are draggable (not sortable). Drag them into the list above or below...</h3>
+
+      {{#each model.picklist as |item|}}
+        {{#draggable-item tagname="div" model=item}}
+          {{{item.label}}} {{item.counter}}
+        {{/draggable-item}}
+      {{/each}}
+
+    </section>
 
     <section class="vertical-demo-droptarget">
-      <h3>Vertical with drop target</h3>
+      <h3>Vertical just text...</h3>
 
       {{#sortable-group tagName="ol" onChange="update" onInsert="insert" as |group|}}
         {{#each model.items as |item|}}
@@ -58,7 +63,7 @@
 
 
     <section class="horizontal-demo-droptarget">
-      <h3>Horizontal with drop target</h3>
+      <h3>Horizontal just text...</h3>
 
       {{#sortable-group tagName="ol" direction="x" onChange="update" onInsert="insert" as |group|}}
         {{#each model.items as |item|}}
@@ -69,7 +74,6 @@
       {{/sortable-group}}
 
     </section>
-
 
     <section class="table-demo">
       <h3>Table</h3>
