@@ -217,3 +217,9 @@ li.drop-target
   background-color: #f8fff8;
   padding : 3px;
 }
+
+.smallText
+{
+  padding-right:50px;
+  font-size:12px;
+}
