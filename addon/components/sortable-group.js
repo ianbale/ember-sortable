@@ -228,7 +228,6 @@ export default Component.extend({
     this.sendAction('onInsert', insertPos, draggedModel);
   },
 
-
   /**
     Prepare for sorting.
     Main purpose is to stash the current itemPosition so

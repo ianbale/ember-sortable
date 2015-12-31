@@ -187,23 +187,21 @@
   color: pink;
 }
 
-.drop-target, .drop-target td
+.drop-target
 {
     border : 2px dashed yellow !important;
     background-color: #FFFFDD !important;
 }
 
+tr.drop-target, tr.drop-target td
+{
+    border : 2px dashed yellow !important;
+    background : none !important;
+}
+
 li.drop-target
 {
   display : inline-block;
-}
-
-.drag-me
-{
-    border : 2px dotted blue !important;
-    background-color: #FFFFDD !important; 
-    width : 100%;
-    height : 75px;
 }
 
 .dragging-over .sortable-item
