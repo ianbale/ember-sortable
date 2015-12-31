@@ -545,12 +545,22 @@ export default Mixin.create({
   _drop() {
     if (!this.element) { return; }
 
+    // Dropping in the bottom half of the drop-target is causing our dropped item to end up one row too far down.
+    // This is due to us adding half the drop-target position when calculating earlier in the process.
+    // So, when we drop we'll just set our droppied item position to match the drop-target.
+    const groupDirection = this.get('group.direction');
+    let dropTargetPosition = $(".drop-target").position();
+
+    this._x = dropTargetPosition.left;
+    this._y = dropTargetPosition.top;
+
     this._preventClick(this.element);
 
     this.set('isDragging', false);
     this.set('isDropping', true);
 
     this._tellGroup('update');
+
 
     this._waitForTransition()
       .then(run.bind(this, '_complete'));
