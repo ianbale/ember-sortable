@@ -235,65 +235,7 @@ export default Mixin.create({
 
         this.dropTargetPosition = value;
 
-        let dropTargetDimensions =  this.get("dropTargetDimensions");
-
-        if(value !== DROP_TARGET_NONE)
-        {
-          if (!this.$().hasClass(value) )
-          {
-            if (this.$().hasClass('after'))
-            {
-              this.$().next().remove();
-              this.$().removeClass('after');
-            }
-
-            if (this.$().hasClass('before'))
-            {
-              this.$().prev().remove();
-              this.$().removeClass('before');
-            }
-
-            let thisItemTagName = this.$().context.tagName;
-
-            if (thisItemTagName === "TR")
-            {
-              let TDCount = this.$().context.childElementCount;
-              this.$()[value]('<tr class="drop-target"><td colspan="' + TDCount + '">&nbsp;</td></tr>');
-            }
-            else
-            {
-              this.$()[value]('<' + thisItemTagName +' class="drop-target">&nbsp;</'+ thisItemTagName+'>');
-            }
-
-            this.$().addClass('drop-target-parent');
-            this.$().addClass(value);
-
-
-            let translationMatrix = this.$().css('transform');
-
-            $('.drop-target').css({
-              transform: translationMatrix,
-              height : dropTargetDimensions.height,
-              width : dropTargetDimensions.width
-            });
-          }
-        }
-        else
-        {
-          if (this.$().hasClass('drop-target-parent'))
-          {
-            if (this.$().hasClass('after'))
-            {
-              this.$().next().remove();
-            }
-            else
-            {
-              this.$().prev().remove();
-            }
-
-            this.$().removeClass('drop-target-parent before after');
-          }
-        }
+        this._scheduleApplyDropTarget();
       }
     },
   }).volatile(),
@@ -494,6 +436,14 @@ export default Mixin.create({
   },
 
   /**
+    @method _scheduleApplyPosition
+    @private
+  */
+  _scheduleApplyDropTarget() {
+    run.scheduleOnce('render', this, '_applyDropTarget');
+  },
+
+  /**
     @method _applyPosition
     @private
   */
@@ -517,6 +467,75 @@ export default Mixin.create({
       this.$().css({
         transform: `translateY(${dy}px)`
       });
+    }
+  },
+
+  /**
+    @method _applyDropTarget
+    @private
+  */
+  _applyDropTarget() {
+    if (!this.element) { return; }
+
+    let dropTargetDimensions  =  this.get("dropTargetDimensions");
+    let dropTargetPosition    =  this.get("dropTargetPosition");
+
+    if(dropTargetPosition !== DROP_TARGET_NONE)
+    {
+      if (!this.$().hasClass(dropTargetPosition) )
+      {
+        if (this.$().hasClass('after'))
+        {
+          this.$().next().remove();
+          this.$().removeClass('after');
+        }
+
+        if (this.$().hasClass('before'))
+        {
+          this.$().prev().remove();
+          this.$().removeClass('before');
+        }
+
+        let thisItemTagName = this.$().context.tagName;
+
+        if (thisItemTagName === "TR")
+        {
+          let TDCount = this.$().context.childElementCount;
+          this.$()[dropTargetPosition]('<tr class="drop-target"><td colspan="' + TDCount + '">&nbsp;</td></tr>');
+        }
+        else
+        {
+          this.$()[dropTargetPosition]('<' + thisItemTagName +' class="drop-target">&nbsp;</'+ thisItemTagName+'>');
+        }
+
+        this.$().addClass('drop-target-parent');
+        this.$().addClass(dropTargetPosition);
+
+
+        let translationMatrix = this.$().css('transform');
+
+        $('.drop-target').css({
+          transform: translationMatrix,
+          height : dropTargetDimensions.height,
+          width : dropTargetDimensions.width
+        });
+      }
+    }
+    else
+    {
+      if (this.$().hasClass('drop-target-parent'))
+      {
+        if (this.$().hasClass('after'))
+        {
+          this.$().next().remove();
+        }
+        else
+        {
+          this.$().prev().remove();
+        }
+
+        this.$().removeClass('drop-target-parent before after');
+      }
     }
   },
 
@@ -547,12 +566,12 @@ export default Mixin.create({
 
     // Dropping in the bottom half of the drop-target is causing our dropped item to end up one row too far down.
     // This is due to us adding half the drop-target position when calculating earlier in the process.
-    // So, when we drop we'll just set our droppied item position to match the drop-target.
+    // So, when we drop we'll just set our dropped item position to match the drop-target.
     const groupDirection = this.get('group.direction');
     let dropTargetPosition = $(".drop-target").position();
 
-    this._x = dropTargetPosition.left;
-    this._y = dropTargetPosition.top;
+    this._x = dropTargetPosition.left -1;
+    this._y = dropTargetPosition.top -1;
 
     this._preventClick(this.element);
 

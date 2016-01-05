@@ -9,7 +9,6 @@ export default Ember.Route.extend({
     };
   },
  
-
   actions: {
     update(newOrder, draggedModel)
     {
@@ -31,9 +30,7 @@ export default Ember.Route.extend({
     },
 
     sortstart (draggedModel)
-    {
-      Ember.Logger.log("sort start",draggedModel)
-      
+    {      
       let items     = this.get("currentModel.items");
       let modelItem = items.findBy('label', draggedModel.model.label);
 
@@ -42,8 +39,6 @@ export default Ember.Route.extend({
 
     sortend (draggedModel)
     {
-      Ember.Logger.log("sort end",draggedModel)
-
       let items     = this.get("currentModel.items");
       let modelItem = items.findBy('label', draggedModel.model.label);
 

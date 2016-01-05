@@ -42,6 +42,15 @@ export default Component.extend({
     @property itemPosition
     @type Number
   */
+
+    /**
+    The frequency with which the drop target position is refreshed
+    @property updateInterval
+    @type Number
+    @default 125
+  */
+  updateInterval: 125,
+
   itemPosition: computed(function() {
     let direction = this.get('direction');
     return this.get(`sortedItems.firstObject.${direction}`);
@@ -127,9 +136,25 @@ export default Component.extend({
   {
     event.preventDefault();
 
-    let dragItem = {x:event.originalEvent.pageX,y:event.originalEvent.pageY,width:'100%',height:50,newItem:true}; // Need to dynamically set height / width here...
+    let containerOffset = this.$().offset();
+
+    let dragItem = {x:event.originalEvent.pageX - containerOffset.left,y:event.originalEvent.pageY - containerOffset.top,width:'100%',height:50,newItem:true}; // Need to dynamically set height / width here...
 
     this.set("dragitem",dragItem);
+
+    this.scheduleHandleDragOver(event);
+  },
+
+  scheduleHandleDragOver(event)
+  {
+    let updateInterval = this.get('updateInterval');
+
+    run.throttle(this, '_handleDragOver', event, updateInterval);
+  },
+
+  _handleDragOver (event)
+  {
+    let dragItem = this.get("dragitem");
 
     let sortedItems = this.get('sortedItemsWithDragIn');
  
@@ -154,7 +179,6 @@ export default Component.extend({
     let previousItem;
     let setDropTargetBeforeNextItem = false;
     let previousItemDropState;
-
 
     sortedItems.forEach(item => {
 

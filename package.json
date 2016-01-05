@@ -1,7 +1,7 @@
 {
-  "name": "ember-sortable",
+  "name": "ember-sortable-hf",
   "version": "1.6.2",
-  "description": "Sortable UI primitives for Ember.",
+  "description": "Sortable UI primitives for Ember (HazFrog modified)",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -46,6 +46,6 @@
   },
   "ember-addon": {
     "configPath": "tests/dummy/config",
-    "demoURL": "http://jgwhite.co.uk/ember-sortable/demo/"
+    "demoURL": "http://www.bale.net/ember-sortable/"
   }
 }
