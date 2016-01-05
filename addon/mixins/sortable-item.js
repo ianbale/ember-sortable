@@ -141,6 +141,27 @@ export default Mixin.create({
     return 0;
   }).volatile(),
 
+
+  midx : computed({
+    get()
+    {
+      let x = this.get("x");
+      let w = this.get("width");
+
+      return x + (w/2);
+    }
+  }).volatile(),
+
+  midy : computed({
+    get()
+    {
+      let y = this.get("y");
+      let h = this.get("height");
+
+      return y + (h/2);
+    }
+  }).volatile(),
+
   /**
     Horizontal position of the item.
     @property x

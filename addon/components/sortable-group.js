@@ -64,7 +64,7 @@ export default Component.extend({
     let items = a(this.get('items'));
     let direction = this.get('direction');
 
-    return items.sortBy(direction);
+    return items.sortBy("mid" + direction);
   }).volatile(),
 
   /**
@@ -98,7 +98,7 @@ export default Component.extend({
 
     dragitems.push(dragitem);
 
-    return dragitems.sortBy(direction);
+    return dragitems.sortBy("mid" + direction);
   }).volatile(),
 
   dragitem : {},
@@ -130,7 +130,7 @@ export default Component.extend({
   },
 
   /**
-    Disable default action for dragOver event and instead insert our drop targets
+    Disable default action for dragOver event and instead insert our drop target
   */
   dragOver: function(event)
   {
@@ -138,44 +138,26 @@ export default Component.extend({
 
     let containerOffset = this.$().offset();
 
-    let dragItem = {x:event.originalEvent.pageX - containerOffset.left,y:event.originalEvent.pageY - containerOffset.top,width:'100%',height:50,newItem:true}; // Need to dynamically set height / width here...
+    let dragItem = {midx:event.originalEvent.pageX - containerOffset.left,midy:event.originalEvent.pageY - containerOffset.top,width:'100%',height:50,newItem:true}; // Need to dynamically set height / width here...
 
     this.set("dragitem",dragItem);
 
-    this.scheduleHandleDragOver(event);
+    this.scheduleHandleDragOver();
   },
 
-  scheduleHandleDragOver(event)
+  scheduleHandleDragOver()
   {
     let updateInterval = this.get('updateInterval');
 
-    run.throttle(this, '_handleDragOver', event, updateInterval);
+    run.throttle(this, '_handleDragOver', updateInterval);
   },
 
-  _handleDragOver (event)
+  _handleDragOver ()
   {
     let dragItem = this.get("dragitem");
 
     let sortedItems = this.get('sortedItemsWithDragIn');
  
-    this._itemPosition = this.get('itemPosition');
-    let position = this._itemPosition;
-
-    // Just in case we haven’t called prepare first.
-    if (position === undefined) {
-      position = this.get('itemPosition');
-    }
-
-    let dimension;
-    let direction = this.get('direction');
-
-    if (direction === 'x') {
-      dimension = 'width';
-    }
-    if (direction === 'y') {
-      dimension = 'height';
-    }
-
     let previousItem;
     let setDropTargetBeforeNextItem = false;
     let previousItemDropState;
