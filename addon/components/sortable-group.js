@@ -60,11 +60,22 @@ export default Component.extend({
     @property sortedItems
     @type Array
   */
-  sortedItems: computed(function() {
+  sortedItemsMid: computed(function() {
     let items = a(this.get('items'));
     let direction = this.get('direction');
 
     return items.sortBy("mid" + direction);
+  }).volatile(),
+
+  /**
+    @property sortedItems
+    @type Array
+  */
+  sortedItems: computed(function() {
+    let items = a(this.get('items'));
+    let direction = this.get('direction');
+
+    return items.sortBy(direction);
   }).volatile(),
 
   /**
@@ -116,9 +127,7 @@ export default Component.extend({
   },
 
   dragLeave : function(event)
-  {return;
-    if (this.$().hasClass("dragging-over") && this.$().context === event.target)
-    {
+  {
       this.$().removeClass("dragging-over");
 
       let items = this.get("sortedItemsWithDragIn");
@@ -126,7 +135,6 @@ export default Component.extend({
       items.forEach(item => {
         set(item, 'dropTarget', DROP_TARGET_NONE);
       });
-    }
   },
 
   /**
@@ -214,11 +222,21 @@ export default Component.extend({
   {
     this.$().removeClass("dragging-over");
 
+    try
+    {
+      var draggedModel  = JSON.parse(event.dataTransfer.getData("text"));
+    }
+    catch(e)
+    {
+      $(".drop-target").remove();
+      $(".sortable-item").removeClass("before after drop-target-parent");
+      return;
+    }
+
     let dragitems     = this.get('sortedItemsWithDragIn');
     let itemModels    = dragitems.mapBy('model');
     let draggedItem   = dragitems.findBy('newItem', true);
     let insertPos     = dragitems.indexOf(draggedItem);
-    let draggedModel  = JSON.parse(event.dataTransfer.getData("text"));
 
     // Reset things since positions will change as a result of inserting an item.
     delete this._itemPosition;
@@ -249,7 +267,7 @@ export default Component.extend({
     {
       _this._itemPosition = _this.get('itemPosition');
 
-      let sortedItems = _this.get('sortedItems');
+      let sortedItems = _this.get('sortedItemsMid');
       let position = _this._itemPosition;
 
       // Just in case we haven’t called prepare first.
@@ -307,7 +325,7 @@ export default Component.extend({
     @method update
   */
   update() {
-    let sortedItems = this.get('sortedItems');
+    let sortedItems = this.get('sortedItemsMid');
     let previousItem;
     let setDropTargetBeforeNextItem = false;
     let foundDragger = false;

@@ -600,8 +600,7 @@ export default Mixin.create({
     this.set('isDropping', true);
 
     this._tellGroup('update');
-
-
+    
     this._waitForTransition()
       .then(run.bind(this, '_complete'));
   },

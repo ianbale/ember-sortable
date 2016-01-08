@@ -1,6 +1,6 @@
 {
   "name": "ember-sortable-hf",
-  "version": "1.6.3",
+  "version": "1.6.4",
   "description": "Sortable UI primitives for Ember (HazFrog modified)",
   "directories": {
     "doc": "doc",
