@@ -130,8 +130,6 @@ export default Component.extend({
 
   dragLeave : function(event)
   {
-  Ember.Logger.log("dragLeave",event.target,$(event.target).hasClass('ember-sortable'))
-
     if ($(event.target).hasClass('ember-sortable'))
     {
       this.$().removeClass("dragging-over");
