@@ -11,6 +11,8 @@ const DROP_TARGET_NONE = "none";
 export default Component.extend({
   layout: layout,
 
+  classNames : ['ember-sortable'],
+
   /**
     @property direction
     @type string
@@ -128,6 +130,10 @@ export default Component.extend({
 
   dragLeave : function(event)
   {
+  Ember.Logger.log("dragLeave",event.target,$(event.target).hasClass('ember-sortable'))
+
+    if ($(event.target).hasClass('ember-sortable'))
+    {
       this.$().removeClass("dragging-over");
 
       let items = this.get("sortedItemsWithDragIn");
@@ -135,6 +141,7 @@ export default Component.extend({
       items.forEach(item => {
         set(item, 'dropTarget', DROP_TARGET_NONE);
       });
+    }
   },
 
   /**
