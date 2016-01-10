@@ -148,7 +148,7 @@ export default Mixin.create({
       let x = this.get("x");
       let w = this.get("width");
 
-      return x + (w/2);
+      return x + (w/2)  + this.get("dropTargetDimensions.width");
     }
   }).volatile(),
 
@@ -158,7 +158,7 @@ export default Mixin.create({
       let y = this.get("y");
       let h = this.get("height");
 
-      return y + (h/2);
+      return y + (h/2) + this.get("dropTargetDimensions.height");
     }
   }).volatile(),
 
@@ -174,7 +174,7 @@ export default Mixin.create({
         this._x = this.element.scrollLeft + this.element.offsetLeft - marginLeft;
       }
 
-      return this._x + this.get("dropTargetDimensions.width");
+      return this._x;
     },
     set(_, value) {
       if (value !== this._x) {
@@ -194,7 +194,7 @@ export default Mixin.create({
       if (this._y === undefined) {
         this._y = this.element.offsetTop;
       }
-      return this._y + this.get("dropTargetDimensions.height");
+      return this._y;
     },
     set(key, value) {
       if (value !== this._y) {
@@ -355,7 +355,7 @@ export default Mixin.create({
       return;
     }
 
-    event.preventDefault();
+ //   event.preventDefault(); // This disables autoscroll!!!
     event.stopPropagation();
 
     let startDragListener = event => this._startDrag(event);
@@ -589,10 +589,10 @@ export default Mixin.create({
     // This is due to us adding half the drop-target position when calculating earlier in the process.
     // So, when we drop we'll just set our dropped item position to match the drop-target.
     const groupDirection = this.get('group.direction');
-    let dropTargetPosition = $(".drop-target").position();
+    let dropTarget = $(".drop-target");
 
-    this._x = dropTargetPosition.left -1;
-    this._y = dropTargetPosition.top -1;
+    this._x -= dropTarget.width();
+    this._y -= dropTarget.height();
 
     this._preventClick(this.element);
 

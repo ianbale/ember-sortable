@@ -272,7 +272,7 @@ export default Component.extend({
     {
       _this._itemPosition = _this.get('itemPosition');
 
-      let sortedItems = _this.get('sortedItemsMid');
+      let sortedItems = _this.get('sortedItems');
       let position = _this._itemPosition;
 
       // Just in case we haven’t called prepare first.
@@ -377,7 +377,8 @@ export default Component.extend({
     @method commit
   */
   commit() {
-    let items = this.get('sortedItems');
+
+    let items = this.get('sortedItemsMid');
     let groupModel = this.get('model');
     let itemModels = items.mapBy('model');
     let draggedItem = items.findBy('wasDropped', true);
@@ -411,5 +412,6 @@ export default Component.extend({
     }
 
     this.sendAction('onSortEnd', draggedItem);
-  }
+  },
+
 });
