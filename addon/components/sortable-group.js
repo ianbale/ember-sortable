@@ -267,6 +267,8 @@ export default Component.extend({
   {
     this.sendAction('onSortStart', draggedItem);
 
+    this.$().addClass('dragging-over');
+
     var _this = this;
     Ember.run.next(function()
     {
@@ -377,6 +379,8 @@ export default Component.extend({
     @method commit
   */
   commit() {
+
+    this.$().removeClass('dragging-over');
 
     let items = this.get('sortedItemsMid');
     let groupModel = this.get('model');

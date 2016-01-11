@@ -355,7 +355,8 @@ export default Mixin.create({
       return;
     }
 
- //   event.preventDefault(); // This disables autoscroll!!!
+
+ //   event.preventDefault(); // This disables autoscroll!!! - but causes text selection when dragging :-()
     event.stopPropagation();
 
     let startDragListener = event => this._startDrag(event);
