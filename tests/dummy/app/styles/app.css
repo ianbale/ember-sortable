@@ -204,12 +204,14 @@ li.drop-target
   display : inline-block;
 }
 
+
 .dragging-over .sortable-item
 {
   pointer-events: none;
 }
 
-.dragging-over *,
+
+.no-selection
 {
   -webkit-touch-callout: none !important;
   -webkit-user-select: none !important;
