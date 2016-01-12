@@ -7,18 +7,33 @@ export default Mixin.create({
   classNames: ['draggable-item'],
   attributeBindings: ['draggable'],
   draggable : true,
+  handle : null,
 
-  dragStart : function(event)
+  // Setup our data transfer object
+  // We send a model defining the item we wish to insert
+  // And we set effectAllowed to copy to indicate an insert rather than a move
+
+  mouseDown (event)
   {
-   event.dataTransfer.setData('text', JSON.stringify(this.model));
-	 event.dataTransfer.effectAllowed = 'copy';
-	 event.dropEffect = "copy";
+    // If we are using a drag handle, then ignore drag if not initiated by the handle
+    let handle = this.get('handle');
+
+    if (handle && !$(event.target).closest(handle).length)
+    {
+      event.preventDefault();
+    }
   },
 
-  dragEnd : function(event)
+  dragStart (event)
   {
-	 $(".drop-target").remove();
-	 $(".sortable-item").removeClass("before after drop-target-parent");
+    event.dataTransfer.setData('model', JSON.stringify(this.model));
+    event.dataTransfer.effectAllowed = "copy";
+  },
+
+  // Cleanup if we ended up aborting the insert
+  dragEnd (event)
+  {
+    $(".drop-target").remove();
   },
 
 });

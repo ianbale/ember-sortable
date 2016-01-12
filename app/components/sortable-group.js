@@ -1,3 +1,3 @@
-import sortableGroup from 'ember-sortable/components/sortable-group';
+import sortableGroup from 'ember-html5-draggable/components/sortable-group';
 
 export default sortableGroup;

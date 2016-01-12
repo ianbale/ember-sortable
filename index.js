@@ -2,5 +2,5 @@
 'use strict';
 
 module.exports = {
-  name: 'ember-sortable'
+  name: 'ember-html5-draggable'
 };

@@ -1,7 +1,7 @@
 {
-  "name": "ember-sortable-hf",
-  "version": "1.6.5",
-  "description": "Sortable UI primitives for Ember (HazFrog modified)",
+  "name": "ember-html5-draggable",
+  "version": "1.0.0",
+  "description": "Sortable/Draggable UI primitives for Ember using HTML5 dragging",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -11,7 +11,7 @@
     "start": "ember server",
     "test": "ember try:testall"
   },
-  "repository": "https://github.com/jgwhite/ember-sortable",
+  "repository": "https://github.com/ianbale/ember-html5-draggable",
   "engines": {
     "node": ">= 0.10.0"
   },
@@ -46,6 +46,6 @@
   },
   "ember-addon": {
     "configPath": "tests/dummy/config",
-    "demoURL": "http://www.bale.net/ember-sortable/"
+    "demoURL": "http://www.bale.net/ember-html5-draggable/"
   }
 }
