@@ -179,7 +179,7 @@ export default Mixin.create({
     set(_, value) {
       if (value !== this._x) {
         this._x = value;
-        this._scheduleApplyPosition();
+          this._scheduleApplyPosition();
       }
     },
   }).volatile(),
@@ -199,7 +199,7 @@ export default Mixin.create({
     set(key, value) {
       if (value !== this._y) {
         this._y = value;
-        this._scheduleApplyPosition();
+          this._scheduleApplyPosition();
       }
     }
   }).volatile(),
@@ -269,6 +269,8 @@ export default Mixin.create({
     set(_, value) {
       if (value !== this._dropTargetDimensions) {
         this._dropTargetDimensions = value;
+
+        this._applyPosition(); 
       }
     },
   }).volatile(),
@@ -390,9 +392,15 @@ export default Mixin.create({
       .on('mousemove touchmove', drag)
       .on('mouseup touchend', drop);
 
-    this._tellGroup('prepare',this);
     this.set('isDragging', true);
-    this.sendAction('onDragStart', this.get('model'));
+    this._tellGroup('prepare',this);
+   
+    let _this = this;
+
+    Ember.run.next(function()
+    {
+      _this.sendAction('onDragStart', _this.get('model'));
+    });
   },
 
   /**
@@ -465,6 +473,22 @@ export default Mixin.create({
     run.scheduleOnce('render', this, '_applyDropTarget');
   },
 
+  
+  _translatePosition : {x:0,y:0},
+
+  translatePosition: computed({
+    get() {
+
+      return this._translatePosition;
+    },
+    set(_, value) {
+      if (value !== this._translatePosition) {
+        this._translatePosition = value;
+      }
+    },
+  }).volatile(),
+
+
   /**
     @method _applyPosition
     @private
@@ -474,6 +498,8 @@ export default Mixin.create({
 
     const groupDirection = this.get('group.direction');
 
+    let dropTargetDimensions  =  this.get("dropTargetDimensions");
+
     if (groupDirection === 'x') {
       let x = this.get('x');
       let dx = x - this.element.offsetLeft + parseFloat(this.$().css('margin-left'));
@@ -482,9 +508,18 @@ export default Mixin.create({
         transform: `translateX(${dx}px)`
       });
     }
+
     if (groupDirection === 'y') {
       let y = this.get('y');
       let dy = y - this.element.offsetTop;
+
+    if (!this.get("isDragging"))
+    {
+        dy = this.get("_translatePosition").y;      
+    }
+
+Ember.Logger.log(this.model.name,dy,this.get("_translatePosition"),this.get("isDragging"))
+
 
       this.$().css({
         transform: `translateY(${dy}px)`

@@ -302,7 +302,7 @@ export default Component.extend({
         if (item === draggedItem)
         {
             dragItemDimensions.width = get(item, 'width');
-            dragItemDimensions.height = get(item, 'height');
+            dragItemDimensions.height = get(item, 'height') + 5;
 
             _this.set("dragItemDimensions",dragItemDimensions);
 
@@ -315,14 +315,18 @@ export default Component.extend({
           if (foundDragger)
           {
             set(item, direction, position);
-            // Small bug here. If we are horizintal dragging and our drag item is taller than others in the list then it gets positioned vertically in the wrong location.
+            set(item, "translatePosition", {x:-1 * dragItemDimensions.width,y:-1 * dragItemDimensions.height});
+            // Small bug here. If we are horizontal dragging and our drag item is taller than others in the list then it gets positioned vertically in the wrong location.
+          }
+          else
+          {
+            set(item, "translatePosition", {x:0,y:0});            
           }
 
+          position += get(item, dimension);
           previousItem = item;
-        }
+        }  
 
-        position += get(item, dimension);
-    
       });
     });
   },
